@@ -28,12 +28,6 @@ export default function Footer() {
             © {currentYear}
           </p>
         </div>
-
-        <div className="mt-6 pt-6 border-t border-zinc-900 text-center">
-          <p className="font-body text-sm text-zinc-600">
-            用 <span className="text-red-500">❤️</span> 和 <span className="gradient-text">AI</span> 构建
-          </p>
-        </div>
       </div>
     </footer>
   );
