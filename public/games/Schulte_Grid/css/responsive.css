@@ -1,0 +1,252 @@
+/**
+ * 响应式设计
+ */
+
+/* 平板设备 */
+@media (max-width: 768px) {
+    .app-container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .app-header h1 {
+        font-size: 24px;
+    }
+
+    .difficulty-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .game-info {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .time,
+    .target {
+        font-size: 24px;
+    }
+
+    .grid-container {
+        gap: 6px;
+    }
+
+    .grid-item {
+        font-size: 28px;
+    }
+
+    .stats-content {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .modal-content {
+        max-height: 90vh;
+    }
+}
+
+/* 手机设备 */
+@media (max-width: 480px) {
+    .app-container {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+
+    .app-header h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .difficulty-selector {
+        gap: 4px;
+    }
+
+    .difficulty-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .game-info {
+        padding: 12px;
+    }
+
+    .time,
+    .target {
+        font-size: 20px;
+    }
+
+    .grid-container {
+        gap: 4px;
+    }
+
+    .grid-item {
+        font-size: 24px;
+        border-width: 1px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .stats-panel,
+    .reference-panel {
+        padding: 12px;
+    }
+
+    .reference-table {
+        font-size: 12px;
+    }
+
+    .reference-table th,
+    .reference-table td {
+        padding: 6px 4px;
+    }
+
+    .modal-content {
+        margin: 10px;
+        max-height: 85vh;
+    }
+
+    .modal-header,
+    .modal-body {
+        padding: 16px;
+    }
+
+    .success-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 36px;
+    }
+
+    .complete-animation h2 {
+        font-size: 20px;
+    }
+
+    .completion-time {
+        font-size: 28px;
+    }
+
+    .new-record {
+        font-size: 16px;
+    }
+
+    .history-tabs .tab {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .history-item {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .history-item .rank {
+        min-width: 30px;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .grid-item {
+        min-height: 44px; /* 推荐的触摸目标最小尺寸 */
+        font-size: 26px;
+    }
+
+    .grid-item:hover {
+        transform: none;
+    }
+
+    .grid-item:active {
+        transform: scale(0.92);
+    }
+
+    .difficulty-btn:active {
+        transform: scale(0.95);
+    }
+
+    .btn:active {
+        transform: scale(0.95);
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 600px) and (orientation: landscape) {
+    .app-container {
+        padding: 10px;
+    }
+
+    .app-header {
+        margin-bottom: 10px;
+    }
+
+    .app-header h1 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .difficulty-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .game-info {
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    .time,
+    .target {
+        font-size: 18px;
+    }
+
+    .grid-container {
+        max-width: 400px;
+    }
+
+    .grid-item {
+        font-size: 22px;
+    }
+
+    .controls {
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .stats-panel,
+    .reference-panel {
+        padding: 10px;
+    }
+
+    .stats-panel h2 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1200px) {
+    .app-container {
+        max-width: 900px;
+        padding: 30px;
+    }
+
+    .app-header h1 {
+        font-size: 32px;
+    }
+
+    .grid-container {
+        max-width: 600px;
+    }
+
+    .grid-item {
+        font-size: 42px;
+    }
+}

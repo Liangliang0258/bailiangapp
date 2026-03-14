@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className={`fade-up ${isVisible ? "visible" : ""} relative min-h-[70vh] flex items-center justify-center overflow-hidden`}
+      className={`fade-up ${isVisible ? "visible" : ""} relative min-h-[35vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden`}
     >
       {/* Animated Background */}
       <div className="absolute inset-0 animated-gradient opacity-10" />
@@ -20,7 +20,7 @@ export default function Hero() {
       <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 float" style={{ animationDelay: '4s' }} />
 
       {/* Content */}
-      <div className="relative max-w-4xl mx-auto px-6 py-20 text-center">
+      <div className="relative max-w-4xl mx-auto px-6 py-12 md:py-20 text-center">
         {/* Badge */}
         <div className={`scale-in ${isVisible ? "visible" : ""} inline-flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm border border-zinc-200 mb-8`}>
           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -35,7 +35,7 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="font-body text-xl md:text-2xl text-zinc-600 mt-6 max-w-2xl mx-auto leading-relaxed">
-          探索我用AI创造的有趣小工具和小游戏
+          希望我们永远对世界保持好奇心和想象力
         </p>
 
         {/* CTA Buttons */}
@@ -58,22 +58,6 @@ export default function Hero() {
           >
             联系我
           </a>
-        </div>
-
-        {/* Stats */}
-        <div className={`fade-in ${isVisible ? "visible" : ""} flex flex-wrap justify-center gap-8 mt-16 pt-16 border-t border-zinc-200`}>
-          <div className="text-center">
-            <div className="font-heading font-bold text-3xl text-zinc-900">8+</div>
-            <div className="font-body text-sm text-zinc-500 mt-1">创意作品</div>
-          </div>
-          <div className="text-center">
-            <div className="font-heading font-bold text-3xl text-zinc-900">AI</div>
-            <div className="font-body text-sm text-zinc-500 mt-1">辅助开发</div>
-          </div>
-          <div className="text-center">
-            <div className="font-heading font-bold text-3xl text-zinc-900">∞</div>
-            <div className="font-body text-sm text-zinc-500 mt-1">创意可能</div>
-          </div>
         </div>
       </div>
     </section>

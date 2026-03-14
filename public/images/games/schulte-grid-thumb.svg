@@ -1,0 +1,88 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grid-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f0f9ff;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg-gradient)"/>
+
+  <!-- Title -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">舒尔特方格</text>
+
+  <!-- Grid Container -->
+  <g transform="translate(100, 70)">
+    <!-- Grid Background -->
+    <rect x="0" y="0" width="200" height="160" rx="12" fill="url(#grid-gradient)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))"/>
+
+    <!-- Grid Cells (4x4) -->
+    <!-- Row 1 -->
+    <rect x="10" y="10" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="30" y="33" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">1</text>
+
+    <rect x="55" y="10" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="75" y="33" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">2</text>
+
+    <rect x="100" y="10" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="120" y="33" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">3</text>
+
+    <rect x="145" y="10" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="165" y="33" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">4</text>
+
+    <!-- Row 2 -->
+    <rect x="10" y="50" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="30" y="73" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">5</text>
+
+    <rect x="55" y="50" width="40" height="35" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="75" y="73" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#92400e" text-anchor="middle">6</text>
+
+    <rect x="100" y="50" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="120" y="73" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">7</text>
+
+    <rect x="145" y="50" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="165" y="73" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">8</text>
+
+    <!-- Row 3 -->
+    <rect x="10" y="90" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="30" y="113" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">9</text>
+
+    <rect x="55" y="90" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="75" y="113" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">10</text>
+
+    <rect x="100" y="90" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="120" y="113" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">11</text>
+
+    <rect x="145" y="90" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="165" y="113" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">12</text>
+
+    <!-- Row 4 -->
+    <rect x="10" y="130" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="30" y="153" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">13</text>
+
+    <rect x="55" y="130" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="75" y="153" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">14</text>
+
+    <rect x="100" y="130" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="120" y="153" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">15</text>
+
+    <rect x="145" y="130" width="40" height="35" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="165" y="153" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" text-anchor="middle">16</text>
+
+    <!-- Highlight for current number 6 -->
+    <circle cx="75" cy="67" r="20" fill="none" stroke="#f59e0b" stroke-width="3" opacity="0.8"/>
+  </g>
+
+  <!-- Timer badge -->
+  <rect x="150" y="245" width="100" height="30" rx="15" fill="white" opacity="0.9"/>
+  <text x="200" y="265" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3b82f6" text-anchor="middle">00:23.456</text>
+
+  <!-- "Train your focus" subtitle -->
+  <text x="200" y="290" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" opacity="0.9">训练注意力 · 提升专注力</text>
+</svg>

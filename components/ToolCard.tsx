@@ -27,10 +27,18 @@ const icons = [
 
 export default function ToolCard({ tool, index }: ToolCardProps) {
   const colors = iconColors[index % iconColors.length];
-  const iconSvg = icons[index % icons.length];
+
+  // 为"老婆今天吃什么"使用特殊图标
+  let iconSvg = icons[index % icons.length];
+  if (tool.title === "老婆今天吃什么") {
+    iconSvg = icons[2]; // 使用转换图标（箭头）
+  }
 
   return (
-    <div className="group bg-white rounded-2xl border border-zinc-200/50 shadow-sm hover:shadow-xl hover:border-zinc-300 hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden">
+    <a
+      href={tool.link}
+      className="block group bg-white rounded-2xl border border-zinc-200/50 shadow-sm hover:shadow-xl hover:border-zinc-300 hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden"
+    >
       <div className="p-6">
         {/* Icon */}
         <div className={`w-14 h-14 ${colors.bg} rounded-xl p-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -48,16 +56,13 @@ export default function ToolCard({ tool, index }: ToolCardProps) {
         </p>
 
         {/* Action Link */}
-        <a
-          href={tool.link}
-          className="mt-4 inline-flex items-center gap-2 text-blue-600 font-body font-medium text-sm group-hover:gap-3 transition-all"
-        >
-          立即使用
+        <div className="mt-4 inline-flex items-center gap-2 text-blue-600 font-body font-medium text-sm group-hover:gap-3 transition-all">
+          开始使用
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
-        </a>
+        </div>
       </div>
-    </div>
+    </a>
   );
 }

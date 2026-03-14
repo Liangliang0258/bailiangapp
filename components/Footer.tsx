@@ -1,6 +1,4 @@
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="py-8 px-6 bg-zinc-950 border-t border-zinc-900">
       <div className="max-w-7xl mx-auto">
@@ -14,7 +12,10 @@ export default function Footer() {
 
           <div className="flex items-center gap-6">
             <a href="#portfolio" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
-              作品
+              游戏
+            </a>
+            <a href="#tools" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
+              工具
             </a>
             <a href="#about" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
               关于
@@ -22,10 +23,10 @@ export default function Footer() {
             <a href="#contact" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
               联系
             </a>
-          </div>
+          </div>ßß
 
           <p className="font-body text-sm text-zinc-500">
-            © {currentYear}
+            © {new Date().getFullYear()}
           </p>
         </div>
       </div>

@@ -18,14 +18,14 @@ export default function Home() {
       <Hero />
 
       {/* Games Section */}
-      <section id="portfolio" className="py-24 px-6">
+      <section id="portfolio" className="py-10 md:py-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-heading font-bold text-3xl md:text-4xl text-zinc-900">
               小游戏
             </h2>
             <p className="font-body text-lg text-zinc-600 mt-4 max-w-2xl mx-auto">
-              用AI创造的趣味小游戏，随时试玩
+              好玩的小游戏，摸鱼时刻来一把
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function Home() {
       </section>
 
       {/* Tools Section */}
-      <section className="py-24 px-6 bg-gradient-to-b from-zinc-50 to-white">
+      <section id="tools" className="py-10 md:py-16 px-6 bg-gradient-to-b from-zinc-50 to-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-heading font-bold text-3xl md:text-4xl text-zinc-900">

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="舒尔特方格 - 专业的注意力训练和专注力提升工具">
+    <title>舒尔特方格 - 注意力训练</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/grid.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- 全局导航栏 -->
+    <script src="../navbar.js"></script>
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="app-container">
+
+        <!-- 头部：标题和难度选择 -->
+        <header class="app-header">
+            <h1>舒尔特方格训练</h1>
+            <div class="difficulty-selector">
+                <button class="difficulty-btn" data-size="3">3×3</button>
+                <button class="difficulty-btn active" data-size="4">4×4</button>
+                <button class="difficulty-btn" data-size="5">5×5</button>
+                <button class="difficulty-btn" data-size="6">6×6</button>
+                <button class="difficulty-btn" data-size="4x5">4×5</button>
+            </div>
+        </header>
+
+        <!-- 游戏信息区 -->
+        <div class="game-info">
+            <div class="timer-display">
+                <span class="label">用时</span>
+                <span class="time" id="timer">00:00.000</span>
+            </div>
+        </div>
+
+        <!-- 游戏提示 -->
+        <div class="game-hint" id="game-hint">
+            点击 <strong>"开始游戏"</strong> 按钮开始训练
+        </div>
+
+        <!-- 游戏网格区域 -->
+        <main class="game-board">
+            <div class="grid-container" id="grid">
+                <!-- 动态生成的数字网格 -->
+            </div>
+        </main>
+
+        <!-- 控制按钮 -->
+        <div class="controls">
+            <button class="btn primary" id="start-btn">开始游戏</button>
+            <button class="btn secondary" id="reset-btn" style="display: none;">重置</button>
+        </div>
+
+        <!-- 统计面板 -->
+        <section class="stats-panel">
+            <h2>统计信息</h2>
+            <div class="stats-content">
+                <div class="best-time">
+                    <span class="label">最佳成绩</span>
+                    <span class="value" id="best-time">--:--.---</span>
+                </div>
+                <button class="btn text" id="history-btn">查看历史记录</button>
+            </div>
+        </section>
+
+        <!-- 参考标准表格 -->
+        <section class="reference-panel">
+            <h2>考核标准参考</h2>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>难度</th>
+                        <th>格数</th>
+                        <th>正常水平</th>
+                        <th>大神级别</th>
+                        <th>飞行员考核</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-difficulty="3">
+                        <td>3×3</td>
+                        <td>9</td>
+                        <td>00:07.500</td>
+                        <td>00:04.000</td>
+                        <td>00:02.000</td>
+                    </tr>
+                    <tr data-difficulty="4">
+                        <td>4×4</td>
+                        <td>16</td>
+                        <td>00:15.000</td>
+                        <td>00:08.000</td>
+                        <td>00:04.000</td>
+                    </tr>
+                    <tr data-difficulty="5">
+                        <td>5×5</td>
+                        <td>25</td>
+                        <td>00:30.000</td>
+                        <td>00:12.000</td>
+                        <td>00:06.250</td>
+                    </tr>
+                    <tr data-difficulty="6">
+                        <td>6×6</td>
+                        <td>36</td>
+                        <td>00:45.000</td>
+                        <td>00:20.000</td>
+                        <td>00:10.000</td>
+                    </tr>
+                    <tr data-difficulty="4x5">
+                        <td>4×5</td>
+                        <td>20</td>
+                        <td>00:20.000</td>
+                        <td>00:10.000</td>
+                        <td>00:05.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 历史记录模态框 -->
+        <div class="modal" id="history-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>游戏历史</h2>
+                    <button class="close-btn" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="history-tabs">
+                        <button class="tab" data-difficulty="3">3×3</button>
+                        <button class="tab active" data-difficulty="4">4×4</button>
+                        <button class="tab" data-difficulty="5">5×5</button>
+                        <button class="tab" data-difficulty="6">6×6</button>
+                        <button class="tab" data-difficulty="4x5">4×5</button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <!-- 动态生成的历史记录 -->
+                    </div>
+                    <button class="btn secondary" id="clear-history">清除历史</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 完成游戏提示 -->
+        <div class="modal" id="complete-modal">
+            <div class="modal-content">
+                <div class="complete-animation">
+                    <div class="success-icon">✓</div>
+                    <h2>恭喜完成！</h2>
+                    <p class="completion-difficulty" id="completion-difficulty">4×4</p>
+                    <p class="completion-time" id="completion-time">00:00.000</p>
+                    <p class="new-record" id="new-record" style="display: none;">新纪录！</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn primary" id="play-again-btn">再玩一次</button>
+                    <button class="btn secondary" id="close-complete">关闭</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript 模块 -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

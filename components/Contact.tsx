@@ -22,15 +22,15 @@ export default function Contact() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </>
       ),
-      label: "微信",
-      value: "扫码关注公众号",
+      label: "微信公众号",
+      value: "佰亮同学",
       href: null,
     },
     {
       icon: (
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
       ),
-      label: "公众号",
+      label: "抖音/小红书等自媒体平台",
       value: contactInfo.wechatAccount,
       href: null,
     },
@@ -40,7 +40,7 @@ export default function Contact() {
     <section
       id="contact"
       ref={ref}
-      className={`fade-up ${isVisible ? "visible" : ""} py-24 px-6 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 relative overflow-hidden`}
+      className={`fade-up ${isVisible ? "visible" : ""} py-16 px-6 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 relative overflow-hidden`}
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -82,10 +82,6 @@ export default function Contact() {
             </div>
           ))}
         </div>
-
-        <p className="text-center font-body text-zinc-400 mt-12">
-          期待与你的交流与合作！
-        </p>
       </div>
     </section>
   );

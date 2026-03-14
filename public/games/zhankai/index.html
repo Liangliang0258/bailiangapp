@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>立体方块展开图识别</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="hud">
+      <div class="hud-left">
+        <h1>立体方块展开图识别</h1>
+        <div id="timer">用时：0.0 秒</div>
+        <div id="message" aria-live="polite"></div>
+      </div>
+      <div class="hud-right">
+        <div class="difficulty-buttons">
+          <button class="difficulty-btn" data-value="4" title="简单 4×4">简单</button>
+          <button class="difficulty-btn active" data-value="6" title="一般 6×6">一般</button>
+          <button class="difficulty-btn" data-value="8" title="困难 8×8">困难</button>
+          <button class="difficulty-btn" data-value="11" title="最强大脑 11×11">最强大脑</button>
+        </div>
+        <div class="action-buttons">
+          <button id="submit" class="btn-primary" title="提交答案 (Enter)">提交</button>
+          <button id="clear" class="btn-secondary" title="清除选择 (Esc)">清除</button>
+          <button id="hint" class="btn-secondary" title="显示正确答案 (H)">💡 提示</button>
+          <button id="restart" class="btn-secondary" title="再来一局 (R)">再来一局</button>
+          <button id="toggle-sound" class="btn-icon" title="开关音效 (M)">🔊</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="game-section">
+        <div id="grid-section">
+          <div id="grid" aria-label="6x6 方格，使用方向键移动，空格键选择"></div>
+        </div>
+
+        <div id="divider"></div>
+
+        <section id="cube-section">
+          <div id="cube-wrap">
+            <div id="cube-canvas"></div>
+          </div>
+          <p class="cube-hint">💡 拖拽立方体查看六面图形，找出网格中能组成正确展开图的 6 个格子</p>
+        </section>
+      </section>
+    </main>
+
+    <div id="particles"></div>
+
+    <div id="modal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-desc">
+      <div class="modal-backdrop" data-modal-close="true"></div>
+      <div class="modal-card" role="document">
+        <div class="modal-header">
+          <div id="modal-title">提示</div>
+        </div>
+        <div id="modal-desc" class="modal-body"></div>
+        <div class="modal-actions">
+          <button id="modal-ok" type="button">知道了</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="main.js"></script>
+
+  <!-- 全局导航栏 -->
+  <script src="../navbar.js"></script>
+</body>
+</html>

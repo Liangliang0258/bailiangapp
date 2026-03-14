@@ -17,6 +17,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "作品集", href: "#portfolio" },
+    { name: "工具", href: "#tools" },
     { name: "关于我", href: "#about" },
     { name: "联系", href: "#contact" },
   ];

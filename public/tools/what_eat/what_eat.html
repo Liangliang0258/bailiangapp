@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天陪老婆今天吃什么？</title>
+    <!-- 引入优化字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #FFB7C5;
+            --color-accent: #FF69B4;
+            --color-accent-dark: #FF1493;
+            --color-bg: #FFF5F7;
+            --color-white: #FFFFFF;
+            --color-text-primary: #4A4A4A;
+            --color-text-secondary: #888888;
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+            --shadow-soft: 0 4px 20px rgba(255, 105, 180, 0.15);
+            --shadow-hover: 0 8px 30px rgba(255, 105, 180, 0.25);
+            --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.2);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Fredoka', 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header */
+        .app-header {
+            margin-bottom: 30px;
+        }
+
+        .app-title {
+            font-size: clamp(30px, 7vw, 48px);
+            color: var(--color-accent);
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+            letter-spacing: -0.02em;
+        }
+
+        .app-subtitle {
+            font-size: clamp(17px, 4vw, 22px);
+            color: var(--color-text-secondary);
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .stage-indicator {
+            margin-top: 12px;
+            font-size: 17px;
+            color: var(--color-accent);
+            font-weight: 500;
+            min-height: 28px;
+            line-height: 1.6;
+        }
+
+        /* Wheel Container */
+        .wheel-container {
+            position: relative;
+            width: min(80vw, 350px);
+            height: min(80vw, 350px);
+            margin: 0 auto 30px;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            z-index: 10;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.25));
+        }
+
+        .wheel-pointer::before {
+            content: '❤';
+            display: block;
+            font-size: 36px;
+            color: var(--color-accent);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #wheelCanvas {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(var(--shadow-soft));
+            border-radius: 50%;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 16px 32px;
+            font-size: 19px;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-family: 'Noto Sans SC', 'Fredoka', sans-serif;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: var(--color-white);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--color-white);
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-accent);
+            color: var(--color-white);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(90vw, 380px);
+            height: 100vh;
+            background: var(--color-white);
+            box-shadow: var(--shadow-modal);
+            transform: translateX(100%);
+            transition: transform var(--transition-normal);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-panel:not(.hidden) {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .panel-header h2 {
+            color: var(--color-accent);
+            font-size: 20px;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-fast);
+        }
+
+        .close-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Category Tree */
+        .category-tree {
+            margin-bottom: 30px;
+        }
+
+        .category-item {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: var(--radius-sm);
+        }
+
+        .category-name {
+            font-weight: 500;
+            color: var(--color-text-primary);
+            font-size: 19px;
+            letter-spacing: 0.01em;
+        }
+
+        .food-items {
+            margin-left: 32px;
+            margin-top: 10px;
+        }
+
+        .food-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+        }
+
+        .category-checkbox, .food-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--color-accent);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .food-item span {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* Add Custom Section */
+        .add-custom-section {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .add-custom-section h3 {
+            color: var(--color-accent);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .add-custom-section input,
+        .add-custom-section select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .add-custom-section input:focus,
+        .add-custom-section select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .add-custom-section button {
+            width: 100%;
+            padding: 12px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background var(--transition-fast);
+        }
+
+        .add-custom-section button:hover {
+            background: var(--color-accent-dark);
+        }
+
+        .btn-reset-custom {
+            margin-top: 10px;
+            background: #f0f0f0 !important;
+            color: var(--color-text-secondary) !important;
+            border: 2px solid #ddd !important;
+        }
+
+        .btn-reset-custom:hover {
+            background: #e0e0e0 !important;
+            border-color: #ccc !important;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            z-index: 50;
+        }
+
+        .overlay:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-modal);
+            text-align: center;
+            min-width: 300px;
+            max-width: 90vw;
+            animation: modalPopIn 0.3s ease;
+        }
+
+        @keyframes modalPopIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-title {
+            color: var(--color-text-primary);
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 0.01em;
+        }
+
+        .result-category {
+            font-size: 19px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        .result-food {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin: 18px 0;
+            padding: 24px;
+            background: var(--color-bg);
+            border-radius: var(--radius-md);
+            line-height: 1.3;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-accept, .btn-reject, .btn-back {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-family: inherit;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: white;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-reject {
+            background: #f0f0f0;
+            color: var(--color-text-secondary);
+        }
+
+        .btn-reject:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-back {
+            background: var(--color-white);
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
+
+        .btn-back:hover {
+            background: var(--color-accent);
+            color: var(--color-white);
+        }
+
+        .btn-close {
+            background: linear-gradient(135deg, #ffb6c1, #ff8fab);
+            color: white;
+            border: none;
+            position: relative;
+            padding: 12px 20px 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .btn-close::before {
+            content: '❤';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+        }
+
+        .btn-close:hover {
+            background: linear-gradient(135deg, #ff8fab, #ff6b9d);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-close:active {
+            transform: translateY(0);
+        }
+
+        /* Custom Menu Modal */
+        .custom-menu-modal {
+            max-width: 500px;
+        }
+
+        .custom-menu-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 19px;
+            margin-bottom: 20px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .custom-menu-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .custom-menu-input input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-sm);
+            font-size: 17px;
+            font-family: 'Noto Sans SC', 'Fredoka', sans-serif;
+        }
+
+        .custom-menu-input input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .btn-quick-add {
+            padding: 14px 28px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background var(--transition-fast);
+        }
+
+        .btn-quick-add:hover {
+            background: var(--color-accent-dark);
+        }
+
+        .custom-menu-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+        }
+
+        .custom-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #fafafa;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition-fast);
+        }
+
+        .custom-menu-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .custom-menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .custom-menu-item span {
+            color: var(--color-text-primary);
+            font-size: 16px;
+        }
+
+        .custom-menu-item .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-fast);
+        }
+
+        .custom-menu-item .delete-btn:hover {
+            background: #ff5252;
+        }
+
+        .custom-menu-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Boundary Modal */
+        .boundary-modal .modal-content h2 {
+            color: var(--color-accent);
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .boundary-modal .modal-content p {
+            color: var(--color-text-secondary);
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .boundary-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* Confetti Canvas */
+        .confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 300;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--color-text-primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all var(--transition-normal);
+            z-index: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 15px;
+            }
+
+            .wheel-container {
+                width: 90vw;
+                height: 90vw;
+            }
+
+            .wheel-pointer {
+                width: 35px;
+                height: 35px;
+            }
+
+            .wheel-pointer::before {
+                font-size: 30px;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 14px 26px;
+                font-size: 17px;
+            }
+
+            .settings-panel {
+                width: 100vw;
+            }
+
+            .result-food {
+                font-size: 22px;
+                padding: 15px;
+            }
+
+            .result-actions {
+                flex-direction: column;
+            }
+
+            .btn-accept, .btn-reject, .btn-back {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- 全局导航栏 -->
+    <script src="/games/navbar.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <header class="app-header">
+            <h1 class="app-title">老婆今天吃什么？</h1>
+            <p class="app-subtitle">点击下方按钮开始选妃~</p>
+            <div class="stage-indicator" id="stageIndicator"></div>
+        </header>
+
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <canvas id="wheelCanvas"></canvas>
+        </div>
+
+        <div class="action-buttons">
+            <button id="spinBtn" class="btn-primary">开始选妃 ✨</button>
+            <button id="customModeBtn" class="btn-secondary">自定义菜单 ❤️</button>
+            <button id="settingsBtn" class="btn-secondary">设置菜单 ⚙️</button>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <aside id="settingsPanel" class="settings-panel hidden">
+        <div class="panel-header">
+            <h2>菜单设置</h2>
+            <button id="closeSettings" class="close-btn"></button>
+        </div>
+        <div class="panel-content">
+            <div id="categoryTree" class="category-tree"></div>
+
+            <div class="add-custom-section">
+                <h3>添加自定义菜品</h3>
+                <input type="text" id="customFoodName" placeholder="输入菜名">
+                <select id="customFoodCategory"></select>
+                <button id="addCustomBtn">添加</button>
+                <button id="resetCustomBtn" class="btn-reset-custom">清空自定义菜品</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay hidden"></div>
+
+    <!-- Custom Menu Modal -->
+    <div id="customMenuModal" class="modal hidden">
+        <div class="modal-content custom-menu-modal">
+            <h2 class="result-title">自定义菜单 ❤️</h2>
+            <p class="custom-menu-subtitle">添加你想吃的菜品,然后开始选妃~</p>
+
+            <div class="custom-menu-input">
+                <input type="text" id="quickFoodName" placeholder="输入菜名">
+                <button id="quickAddBtn" class="btn-quick-add">添加</button>
+            </div>
+
+            <div class="custom-menu-list" id="customMenuList">
+                <!-- 动态生成菜品列表 -->
+            </div>
+
+            <div class="result-actions">
+                <button id="startCustomBtn" class="btn-accept">开始选妃 ✨</button>
+                <button id="resetCustomMenuBtn" class="btn-reject">重置</button>
+                <button id="closeCustomMenuBtn" class="btn-close">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Result Modal (Stage 1) -->
+    <div id="categoryModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="result-title">选中大类：</h2>
+            <div class="result-food" id="categoryName"></div>
+            <div class="result-actions">
+                <button id="continueToFoodBtn" class="btn-accept">继续选菜</button>
+                <button id="rejectCategoryBtn" class="btn-reject">换一个大类~</button>
+                <button id="closeCategoryBtn" class="btn-close">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Food Result Modal (Stage 2 - Final) -->
+    <div id="resultModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="result-title">今天吃：</h2>
+            <div class="result-category" id="resultCategory"></div>
+            <div class="result-food" id="resultFoodName"></div>
+            <div class="result-actions">
+                <button id="acceptBtn" class="btn-accept">就吃这个啦！</button>
+                <button id="rejectFoodBtn" class="btn-reject">不想吃，重选~</button>
+                <button id="backToCategoryBtn" class="btn-back">换个大类</button>
+                <button id="closeResultBtn" class="btn-close">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boundary Modal -->
+    <div id="boundaryModal" class="modal boundary-modal hidden">
+        <div class="modal-content">
+            <h2>亲爱的，你太挑啦~</h2>
+            <p>要不咱们喝西北风？</p>
+            <div class="boundary-actions">
+                <button id="resetBlacklistBtn" class="btn-accept">清空黑名单</button>
+                <button id="closeBoundaryModal" class="btn-reject">我再想想</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ==================== Configuration ====================
+        const Config = {
+            WHEEL: {
+                MIN_SPIN_TIME: 2500,
+                MAX_SPIN_TIME: 4000,
+                MIN_ROTATIONS: 4,
+                MAX_ROTATIONS: 6
+            },
+            BLACKLIST_DURATION: 5 * 60 * 1000,
+            COLORS: [
+                '#FFB7C5', '#FFC0CB', '#FFD1DC', '#FFE4E1',
+                '#FFF0F5', '#FFB6C1', '#FFC0CB', '#FF69B4'
+            ],
+            CONFETTI: {
+                COUNT: 150,
+                GRAVITY: 0.2,
+                DRAG: 0.96,
+                COLORS: ['#FFB7C5', '#FF69B4', '#FFD700', '#98D8C8', '#87CEEB']
+            }
+        };
+
+        // ==================== Default Menu Data ====================
+        const DEFAULT_MENU = {
+            "火锅类": ["铜锅涮肉", "川渝火锅", "潮汕牛肉火锅", "贵州酸汤火锅", "泰式冬阴功", "寿喜烧"],
+            "烤肉类": ["韩式烤肉", "日式烧鸟", "东北烤串", "巴西烤肉", "新疆烤羊腿"],
+            "中式炒菜": ["川菜", "湘菜", "粤菜", "北京菜", "东北菜"],
+            "快手简餐": ["麦当劳/肯德基", "螺蛳粉", "麻辣烫", "米线", "面条","肉夹馍凉皮"],
+            "异国料理": ["意大利面/披萨", "日式拉面/寿司", "东南亚菜", "Taco"],
+            "自助类": ["烤肉自助", "火锅自助", "海鲜自助", "披萨自助", "日式自助"]
+        };
+
+        // ==================== Storage Keys ====================
+        const STORAGE_KEYS = {
+            ENABLED_CATEGORIES: 'what_eat_enabled_categories',
+            ENABLED_FOODS: 'what_eat_enabled_foods',
+            BLACKLIST: 'what_eat_blacklist',
+            CUSTOM_FOODS: 'what_eat_custom_foods'
+        };
+
+        // ==================== Utils ====================
+        const Utils = {
+            randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            },
+
+            randomFloat(min, max) {
+                return Math.random() * (max - min) + min;
+            },
+
+            easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+        };
+
+        // ==================== Data Layer ====================
+        const DataLayer = {
+            init() {
+                if (!localStorage.getItem(STORAGE_KEYS.ENABLED_CATEGORIES)) {
+                    this.resetToDefaults();
+                }
+            },
+
+            resetToDefaults() {
+                localStorage.setItem(STORAGE_KEYS.ENABLED_CATEGORIES, JSON.stringify(Object.keys(DEFAULT_MENU)));
+                localStorage.setItem(STORAGE_KEYS.ENABLED_FOODS, JSON.stringify(DEFAULT_MENU));
+                localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify({}));
+                localStorage.setItem(STORAGE_KEYS.CUSTOM_FOODS, JSON.stringify([]));
+            },
+
+            getEnabledCategories() {
+                return JSON.parse(localStorage.getItem(STORAGE_KEYS.ENABLED_CATEGORIES) || JSON.stringify(Object.keys(DEFAULT_MENU)));
+            },
+
+            updateEnabledCategories(categories) {
+                localStorage.setItem(STORAGE_KEYS.ENABLED_CATEGORIES, JSON.stringify(categories));
+            },
+
+            getEnabledFoods() {
+                const enabled = JSON.parse(localStorage.getItem(STORAGE_KEYS.ENABLED_FOODS) || JSON.stringify(DEFAULT_MENU));
+                const blacklist = this.getBlacklist();
+                const now = Date.now();
+
+                const result = {};
+                for (const [category, foods] of Object.entries(enabled)) {
+                    result[category] = foods.filter(food => {
+                        const blacklistTime = blacklist[food];
+                        if (!blacklistTime) return true;
+                        return now - blacklistTime > Config.BLACKLIST_DURATION;
+                    });
+                }
+                return result;
+            },
+
+            updateEnabledFoods(enabledFoods) {
+                localStorage.setItem(STORAGE_KEYS.ENABLED_FOODS, JSON.stringify(enabledFoods));
+            },
+
+            getBlacklist() {
+                const blacklist = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLACKLIST) || '{}');
+                const now = Date.now();
+                const cleaned = {};
+
+                for (const [food, timestamp] of Object.entries(blacklist)) {
+                    if (now - timestamp <= Config.BLACKLIST_DURATION) {
+                        cleaned[food] = timestamp;
+                    }
+                }
+
+                if (Object.keys(cleaned).length !== Object.keys(blacklist).length) {
+                    localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify(cleaned));
+                }
+
+                return cleaned;
+            },
+
+            addToBlacklist(foodName) {
+                const blacklist = this.getBlacklist();
+                blacklist[foodName] = Date.now();
+                localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify(blacklist));
+            },
+
+            clearBlacklist() {
+                localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify({}));
+            },
+
+            getCustomFoods() {
+                return JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_FOODS) || '[]');
+            },
+
+            addCustomFood(category, foodName) {
+                const customs = this.getCustomFoods();
+                customs.push({ category, foodName, id: Date.now() });
+                localStorage.setItem(STORAGE_KEYS.CUSTOM_FOODS, JSON.stringify(customs));
+
+                const enabled = this.getEnabledFoods();
+                if (!enabled[category]) enabled[category] = [];
+                if (!enabled[category].includes(foodName)) {
+                    enabled[category].push(foodName);
+                    this.updateEnabledFoods(enabled);
+                }
+            },
+
+            clearCustomFoods() {
+                localStorage.setItem(STORAGE_KEYS.CUSTOM_FOODS, JSON.stringify([]));
+
+                // 重置为默认菜品
+                this.updateEnabledFoods(DEFAULT_MENU);
+                this.updateEnabledCategories(Object.keys(DEFAULT_MENU));
+            },
+
+            getAllCategories() {
+                const customs = this.getCustomFoods();
+                const result = {};
+
+                // 先复制所有默认菜品
+                for (const [category, foods] of Object.entries(DEFAULT_MENU)) {
+                    result[category] = [...foods];
+                }
+
+                // 再添加自定义菜品(合并而不是覆盖)
+                customs.forEach(item => {
+                    if (!result[item.category]) {
+                        result[item.category] = [];
+                    }
+                    if (!result[item.category].includes(item.foodName)) {
+                        result[item.category].push(item.foodName);
+                    }
+                });
+
+                return result;
+            }
+        };
+
+        // ==================== Wheel Engine ====================
+        const WheelEngine = {
+            canvas: null,
+            ctx: null,
+            items: [],
+            labels: [],
+            currentAngle: 0,
+            isSpinning: false,
+            animationId: null,
+            dpr: 1,
+
+            init(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.dpr = window.devicePixelRatio || 1;
+                this.setupCanvas();
+                window.addEventListener('resize', () => {
+                    requestAnimationFrame(() => this.setupCanvas());
+                });
+            },
+
+            setupCanvas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.dpr = window.devicePixelRatio || 1;
+
+                this.canvas.width = rect.width * this.dpr;
+                this.canvas.height = rect.height * this.dpr;
+
+                this.draw();
+            },
+
+            setItems(items, labels) {
+                this.items = items;
+                this.labels = labels || items;
+                this.currentAngle = 0;
+                this.draw();
+            },
+
+            getRadius() {
+                return Math.min(this.canvas.width, this.canvas.height) / 2 * 0.95;
+            },
+
+            getCenter() {
+                return {
+                    x: this.canvas.width / 2,
+                    y: this.canvas.height / 2
+                };
+            },
+
+            draw() {
+                const { ctx, canvas, items, labels, currentAngle } = this;
+                const radius = this.getRadius();
+                const center = this.getCenter();
+                const sliceAngle = (Math.PI * 2) / items.length;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (items.length === 0) {
+                    ctx.fillStyle = '#ddd';
+                    ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('暂无可选项', center.x, center.y);
+                    return;
+                }
+
+                items.forEach((item, index) => {
+                    const startAngle = currentAngle + index * sliceAngle;
+                    const endAngle = startAngle + sliceAngle;
+
+                    ctx.beginPath();
+                    ctx.moveTo(center.x, center.y);
+                    ctx.arc(center.x, center.y, radius, startAngle, endAngle);
+                    ctx.closePath();
+
+                    ctx.fillStyle = Config.COLORS[index % Config.COLORS.length];
+                    ctx.fill();
+
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    this.drawItemText(labels[index] || item, startAngle, endAngle);
+                });
+
+                ctx.beginPath();
+                ctx.arc(center.x, center.y, radius * 0.1, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fill();
+                ctx.strokeStyle = Config.COLORS[0];
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            },
+
+            drawItemText(text, startAngle, endAngle) {
+                const { ctx } = this;
+                const center = this.getCenter();
+                const radius = this.getRadius();
+                const midAngle = (startAngle + endAngle) / 2;
+                const textRadius = radius * 0.65;
+                const x = center.x + Math.cos(midAngle) * textRadius;
+                const y = center.y + Math.sin(midAngle) * textRadius;
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(midAngle + Math.PI / 2);
+
+                ctx.font = 'bold 28px "Noto Sans SC", sans-serif';
+                ctx.fillStyle = '#333';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const maxLength = 8;
+                const displayText = text.length > maxLength ? text.substring(0, maxLength) + '..' : text;
+                ctx.fillText(displayText, 0, 0);
+
+                ctx.restore();
+            },
+
+            spin() {
+                if (this.isSpinning || this.items.length === 0) return Promise.reject();
+
+                return new Promise((resolve) => {
+                    this.isSpinning = true;
+
+                    const targetIndex = Utils.randomInt(0, this.items.length - 1);
+                    const sliceAngle = (Math.PI * 2) / this.items.length;
+
+                    const rotations = Utils.randomInt(Config.WHEEL.MIN_ROTATIONS, Config.WHEEL.MAX_ROTATIONS);
+                    const duration = Utils.randomInt(Config.WHEEL.MIN_SPIN_TIME, Config.WHEEL.MAX_SPIN_TIME);
+                    const startTime = Date.now();
+                    const startAngle = this.currentAngle;
+
+                    // 箭头指向顶部(-PI/2),需要让目标扇区的中心停在顶部
+                    // 目标扇区的起始角度是: targetIndex * sliceAngle
+                    // 目标扇区的中心角度是: targetIndex * sliceAngle + sliceAngle / 2
+                    // 要让这个中心转到顶部(-PI/2),需要旋转: -PI/2 - (targetSectorCenter - currentAngle)
+                    const targetSectorCenter = targetIndex * sliceAngle + sliceAngle / 2;
+                    const targetAngle = -Math.PI / 2 - targetSectorCenter;
+
+                    // 确保顺时针旋转多圈
+                    const totalRotation = rotations * Math.PI * 2 + (targetAngle - (startAngle % (Math.PI * 2)));
+                    const normalizedRotation = totalRotation < 0 ? totalRotation + Math.PI * 2 * Math.ceil(Math.abs(totalRotation) / (Math.PI * 2)) : totalRotation;
+
+                    const animate = () => {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        const easedProgress = Utils.easeOutCubic(progress);
+                        this.currentAngle = startAngle + normalizedRotation * easedProgress;
+
+                        this.draw();
+
+                        if (progress < 1) {
+                            this.animationId = requestAnimationFrame(animate);
+                        } else {
+                            this.isSpinning = false;
+                            resolve({ item: this.items[targetIndex], index: targetIndex });
+                        }
+                    };
+
+                    this.animationId = requestAnimationFrame(animate);
+                });
+            },
+
+            stop() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+                this.isSpinning = false;
+            }
+        };
+
+        // ==================== Confetti Engine ====================
+        const ConfettiEngine = {
+            canvas: null,
+            ctx: null,
+            particles: [],
+            animationId: null,
+
+            init(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+            },
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            },
+
+            createParticle() {
+                return {
+                    x: this.canvas.width / 2,
+                    y: this.canvas.height / 2,
+                    vx: Utils.randomFloat(-15, 15),
+                    vy: Utils.randomFloat(-20, -5),
+                    size: Utils.randomFloat(5, 12),
+                    color: Config.CONFETTI.COLORS[Utils.randomInt(0, Config.CONFETTI.COLORS.length - 1)],
+                    rotation: Utils.randomFloat(0, Math.PI * 2),
+                    rotationSpeed: Utils.randomFloat(-0.2, 0.2),
+                    opacity: 1,
+                    decay: Utils.randomFloat(0.005, 0.015)
+                };
+            },
+
+            burst() {
+                this.particles = [];
+                for (let i = 0; i < Config.CONFETTI.COUNT; i++) {
+                    this.particles.push(this.createParticle());
+                }
+                this.animate();
+            },
+
+            animate() {
+                const { ctx, canvas, particles } = this;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+
+                    p.vy += Config.CONFETTI.GRAVITY;
+                    p.vx *= Config.CONFETTI.DRAG;
+                    p.vy *= Config.CONFETTI.DRAG;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.rotation += p.rotationSpeed;
+                    p.opacity -= p.decay;
+
+                    if (p.opacity <= 0 || p.y > canvas.height) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.globalAlpha = p.opacity;
+                    ctx.fillStyle = p.color;
+                    this.drawHeart(ctx, p.size);
+                    ctx.restore();
+                }
+
+                if (particles.length > 0) {
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                }
+            },
+
+            drawHeart(ctx, size) {
+                ctx.beginPath();
+                ctx.moveTo(0, size * 0.3);
+                ctx.bezierCurveTo(-size, -size * 0.3, -size, size * 0.6, 0, size);
+                ctx.bezierCurveTo(size, size * 0.6, size, -size * 0.3, 0, size * 0.3);
+                ctx.fill();
+            },
+
+            stop() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                this.particles = [];
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        };
+
+        // ==================== UI Layer ====================
+        const UILayer = {
+            elements: {},
+
+            init() {
+                this.elements = {
+                    spinBtn: document.getElementById('spinBtn'),
+                    customModeBtn: document.getElementById('customModeBtn'),
+                    settingsBtn: document.getElementById('settingsBtn'),
+                    settingsPanel: document.getElementById('settingsPanel'),
+                    closeSettings: document.getElementById('closeSettings'),
+                    categoryTree: document.getElementById('categoryTree'),
+                    customFoodName: document.getElementById('customFoodName'),
+                    customFoodCategory: document.getElementById('customFoodCategory'),
+                    addCustomBtn: document.getElementById('addCustomBtn'),
+                    resetCustomBtn: document.getElementById('resetCustomBtn'),
+                    categoryModal: document.getElementById('categoryModal'),
+                    categoryName: document.getElementById('categoryName'),
+                    continueToFoodBtn: document.getElementById('continueToFoodBtn'),
+                    rejectCategoryBtn: document.getElementById('rejectCategoryBtn'),
+                    closeCategoryBtn: document.getElementById('closeCategoryBtn'),
+                    resultModal: document.getElementById('resultModal'),
+                    resultCategory: document.getElementById('resultCategory'),
+                    resultFoodName: document.getElementById('resultFoodName'),
+                    acceptBtn: document.getElementById('acceptBtn'),
+                    rejectFoodBtn: document.getElementById('rejectFoodBtn'),
+                    backToCategoryBtn: document.getElementById('backToCategoryBtn'),
+                    closeResultBtn: document.getElementById('closeResultBtn'),
+                    boundaryModal: document.getElementById('boundaryModal'),
+                    resetBlacklistBtn: document.getElementById('resetBlacklistBtn'),
+                    closeBoundaryModal: document.getElementById('closeBoundaryModal'),
+                    overlay: document.getElementById('overlay'),
+                    stageIndicator: document.getElementById('stageIndicator'),
+                    wheelCanvas: document.getElementById('wheelCanvas'),
+                    confettiCanvas: document.getElementById('confettiCanvas'),
+                    customMenuModal: document.getElementById('customMenuModal'),
+                    quickFoodName: document.getElementById('quickFoodName'),
+                    quickAddBtn: document.getElementById('quickAddBtn'),
+                    customMenuList: document.getElementById('customMenuList'),
+                    startCustomBtn: document.getElementById('startCustomBtn'),
+                    resetCustomMenuBtn: document.getElementById('resetCustomMenuBtn'),
+                    closeCustomMenuBtn: document.getElementById('closeCustomMenuBtn')
+                };
+            },
+
+            renderSettings(allCategories, enabledFoods) {
+                const container = this.elements.categoryTree;
+                container.innerHTML = '';
+
+                for (const [category, foods] of Object.entries(allCategories)) {
+                    const enabledList = enabledFoods[category] || [];
+                    const allEnabled = foods.length > 0 && foods.every(f => enabledList.includes(f));
+
+                    const div = document.createElement('div');
+                    div.className = 'category-item';
+
+                    const categoryHtml = `
+                        <div class="category-header">
+                            <input type="checkbox" class="category-checkbox"
+                                   ${allEnabled ? 'checked' : ''} data-category="${category}">
+                            <span class="category-name">${category}</span>
+                        </div>
+                        <div class="food-items">
+                            ${foods.map(food => `
+                                <div class="food-item">
+                                    <input type="checkbox" class="food-checkbox"
+                                           ${enabledList.includes(food) ? 'checked' : ''}
+                                           data-category="${category}" data-food="${food}">
+                                    <span>${food}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    div.innerHTML = categoryHtml;
+                    container.appendChild(div);
+
+                    const catCheckbox = div.querySelector('.category-checkbox');
+                    catCheckbox.addEventListener('change', (e) => {
+                        const foodCheckboxes = div.querySelectorAll('.food-checkbox');
+                        foodCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                        this.refreshWheelFromSettings();
+                    });
+
+                    const foodCheckboxes = div.querySelectorAll('.food-checkbox');
+                    foodCheckboxes.forEach(cb => {
+                        cb.addEventListener('change', () => {
+                            const allChecked = Array.from(foodCheckboxes).every(c => c.checked);
+                            catCheckbox.checked = allChecked;
+                            this.refreshWheelFromSettings();
+                        });
+                    });
+                }
+            },
+
+            refreshWheelFromSettings() {
+                const allCategories = DataLayer.getAllCategories();
+                const enabledFoods = {};
+                const enabledCategories = [];
+
+                for (const [category, foods] of Object.entries(allCategories)) {
+                    const checkbox = document.querySelector(`.category-checkbox[data-category="${category}"]`);
+                    if (checkbox && checkbox.checked) {
+                        enabledCategories.push(category);
+                        enabledFoods[category] = foods.filter(food => {
+                            const cb = document.querySelector(`.food-checkbox[data-category="${category}"][data-food="${food}"]`);
+                            return cb && cb.checked;
+                        });
+                    }
+                }
+
+                DataLayer.updateEnabledCategories(enabledCategories);
+                DataLayer.updateEnabledFoods(enabledFoods);
+
+                // 检查可用大类数量
+                if (enabledCategories.length <= 4) {
+                    Utils.showToast('亲爱的，你太挑剔啦~ 要不咱们喝西北风？');
+                }
+
+                if (App.stage === 'category') {
+                    App.loadCategoryWheel();
+                } else {
+                    App.loadFoodWheel(App.currentCategory);
+                }
+            },
+
+            updateCategorySelect(allCategories) {
+                const select = this.elements.customFoodCategory;
+                select.innerHTML = Object.keys(allCategories).map(cat =>
+                    `<option value="${cat}">${cat}</option>`
+                ).join('');
+            },
+
+            showCategory(categoryName) {
+                this.elements.categoryName.textContent = categoryName;
+                this.elements.categoryModal.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+
+            hideCategory() {
+                this.elements.categoryModal.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            showResult(category, foodName) {
+                this.elements.resultCategory.textContent = category;
+                this.elements.resultFoodName.textContent = foodName;
+                this.elements.resultModal.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+
+            showResultCustom(foodName) {
+                // 自定义模式不显示分类,只显示菜品
+                this.elements.resultCategory.textContent = '';
+                this.elements.resultFoodName.textContent = foodName;
+                this.elements.resultModal.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+
+            hideResult() {
+                this.elements.resultModal.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            showBoundary() {
+                this.elements.boundaryModal.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+
+            hideBoundary() {
+                this.elements.boundaryModal.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            showSettings() {
+                this.elements.settingsPanel.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+
+            hideSettings() {
+                this.elements.settingsPanel.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            showCustomMenu() {
+                this.elements.customMenuModal.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+                this.renderCustomMenuList();
+            },
+
+            hideCustomMenu() {
+                this.elements.customMenuModal.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            renderCustomMenuList() {
+                const container = this.elements.customMenuList;
+                const customFoods = DataLayer.getCustomFoods();
+
+                if (customFoods.length === 0) {
+                    container.innerHTML = '<div class="custom-menu-empty">还没有添加菜品哦~<br>在上方输入菜名后点击"添加"</div>';
+                    return;
+                }
+
+                container.innerHTML = customFoods.map(item => `
+                    <div class="custom-menu-item" data-id="${item.id}">
+                        <span>${item.foodName}</span>
+                        <button class="delete-btn" onclick="App.deleteCustomFood(${item.id})">×</button>
+                    </div>
+                `).join('');
+            },
+
+            hideAllOverlays() {
+                this.elements.overlay.classList.add('hidden');
+                this.elements.categoryModal.classList.add('hidden');
+                this.elements.resultModal.classList.add('hidden');
+                this.elements.boundaryModal.classList.add('hidden');
+                this.elements.settingsPanel.classList.add('hidden');
+                this.elements.customMenuModal.classList.add('hidden');
+            },
+
+            setSpinButtonState(spinning, text = '开始选妃 ✨') {
+                this.elements.spinBtn.disabled = spinning;
+                this.elements.spinBtn.textContent = spinning ? text : '开始选妃 ✨';
+            },
+
+            setStageIndicator(text) {
+                this.elements.stageIndicator.textContent = text;
+            }
+        };
+
+        // ==================== Application ====================
+        const App = {
+            stage: 'category',
+            currentCategory: null,
+            currentFood: null,
+
+            init() {
+                DataLayer.init();
+                UILayer.init();
+                WheelEngine.init(UILayer.elements.wheelCanvas);
+                ConfettiEngine.init(UILayer.elements.confettiCanvas);
+
+                this.bindEvents();
+                this.loadCategoryWheel();
+                this.refreshSettings();
+            },
+
+            bindEvents() {
+                const ui = UILayer.elements;
+
+                ui.spinBtn.addEventListener('click', () => this.handleSpin());
+                ui.customModeBtn.addEventListener('click', () => this.handleCustomMode());
+                ui.settingsBtn.addEventListener('click', () => UILayer.showSettings());
+                ui.closeSettings.addEventListener('click', () => UILayer.hideSettings());
+                ui.overlay.addEventListener('click', () => UILayer.hideAllOverlays());
+
+                ui.addCustomBtn.addEventListener('click', () => this.handleAddCustom());
+                ui.resetCustomBtn.addEventListener('click', () => this.handleResetCustom());
+
+                ui.quickAddBtn.addEventListener('click', () => this.handleQuickAdd());
+                ui.quickFoodName.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleQuickAdd();
+                });
+                ui.startCustomBtn.addEventListener('click', () => this.handleStartCustom());
+                ui.resetCustomMenuBtn.addEventListener('click', () => this.handleResetCustomMenu());
+                ui.closeCustomMenuBtn.addEventListener('click', () => UILayer.hideCustomMenu());
+
+                ui.continueToFoodBtn.addEventListener('click', () => this.continueToFood());
+                ui.rejectCategoryBtn.addEventListener('click', () => this.rejectCategory());
+                ui.closeCategoryBtn.addEventListener('click', () => this.closeCategory());
+
+                ui.acceptBtn.addEventListener('click', () => this.handleAccept());
+                ui.rejectFoodBtn.addEventListener('click', () => this.handleRejectFood());
+                ui.backToCategoryBtn.addEventListener('click', () => this.backToCategory());
+                ui.closeResultBtn.addEventListener('click', () => this.closeResult());
+
+                ui.resetBlacklistBtn.addEventListener('click', () => {
+                    DataLayer.clearBlacklist();
+                    UILayer.hideBoundary();
+                    if (this.stage === 'category') {
+                        this.loadCategoryWheel();
+                    } else {
+                        this.loadFoodWheel(this.currentCategory);
+                    }
+                    Utils.showToast('黑名单已清空~');
+                });
+                ui.closeBoundaryModal.addEventListener('click', () => UILayer.hideBoundary());
+            },
+
+            refreshSettings() {
+                const allCategories = DataLayer.getAllCategories();
+                const enabledFoods = DataLayer.getEnabledFoods();
+
+                UILayer.renderSettings(allCategories, enabledFoods);
+                UILayer.updateCategorySelect(allCategories);
+
+                // 刷新当前转盘,但不触发边界弹窗
+                if (this.stage === 'category') {
+                    this.loadCategoryWheel();
+                } else if (this.stage === 'custom') {
+                    // 自定义模式静默更新,不显示提示
+                    const customFoods = DataLayer.getCustomFoods();
+                    if (customFoods.length > 0) {
+                        const foodNames = customFoods.map(item => item.foodName);
+                        WheelEngine.setItems(foodNames, foodNames);
+                    }
+                } else if (this.currentCategory) {
+                    this.loadFoodWheel(this.currentCategory);
+                }
+            },
+
+            loadCategoryWheel() {
+                this.stage = 'category';
+                this.currentCategory = null;
+                this.currentFood = null;
+
+                const enabledCategories = DataLayer.getEnabledCategories();
+                const enabledFoods = DataLayer.getEnabledFoods();
+
+                const validCategories = enabledCategories.filter(cat => {
+                    const foods = enabledFoods[cat] || [];
+                    return foods.length > 0;
+                });
+
+                if (validCategories.length === 0) {
+                    UILayer.showBoundary();
+                    return false;
+                }
+
+                WheelEngine.setItems(validCategories, validCategories);
+                UILayer.setStageIndicator('第一阶段：选择大类');
+                return true;
+            },
+
+            loadCustomModeWheel() {
+                this.stage = 'custom';
+                this.currentCategory = null;
+                this.currentFood = null;
+
+                // 获取所有自定义菜品
+                const customFoods = DataLayer.getCustomFoods();
+
+                if (customFoods.length === 0) {
+                    return false;
+                }
+
+                const foodNames = customFoods.map(item => item.foodName);
+
+                WheelEngine.setItems(foodNames, foodNames);
+                UILayer.setStageIndicator('自定义菜单模式');
+                return true;
+            },
+
+            loadFoodWheel(category) {
+                this.stage = 'food';
+                this.currentCategory = category;
+
+                const enabledFoods = DataLayer.getEnabledFoods();
+                const foods = enabledFoods[category] || [];
+
+                if (foods.length === 0) {
+                    UILayer.showBoundary();
+                    return false;
+                }
+
+                WheelEngine.setItems(foods, foods);
+                UILayer.setStageIndicator(`第二阶段：在【${category}】中选择`);
+                return true;
+            },
+
+            handleSpin() {
+                let hasItems;
+                if (this.stage === 'category') {
+                    hasItems = this.loadCategoryWheel();
+                } else if (this.stage === 'custom') {
+                    hasItems = this.loadCustomModeWheel();
+                } else {
+                    hasItems = this.loadFoodWheel(this.currentCategory);
+                }
+
+                if (!hasItems) {
+                    UILayer.showBoundary();
+                    return;
+                }
+
+                UILayer.setSpinButtonState(true, '选妃中...');
+
+                WheelEngine.spin()
+                    .then(result => {
+                        UILayer.setSpinButtonState(false);
+
+                        if (this.stage === 'category') {
+                            this.currentCategory = result.item;
+                            UILayer.showCategory(result.item);
+                        } else if (this.stage === 'custom') {
+                            this.currentFood = result.item;
+                            // 自定义模式直接显示结果,不需要显示分类
+                            UILayer.showResultCustom(result.item);
+                        } else {
+                            this.currentFood = result.item;
+                            UILayer.showResult(this.currentCategory, result.item);
+                        }
+                    })
+                    .catch(() => {
+                        UILayer.setSpinButtonState(false);
+                    });
+            },
+
+            handleCustomMode() {
+                // 打开自定义菜单弹窗
+                UILayer.showCustomMenu();
+            },
+
+            handleQuickAdd() {
+                const foodName = UILayer.elements.quickFoodName.value.trim();
+
+                if (!foodName) {
+                    Utils.showToast('请输入菜名哦~');
+                    return;
+                }
+
+                if (foodName.length > 20) {
+                    Utils.showToast('菜名太长啦，短一点~');
+                    return;
+                }
+
+                // 检查是否已存在
+                const customFoods = DataLayer.getCustomFoods();
+                if (customFoods.some(item => item.foodName === foodName)) {
+                    Utils.showToast('这个已经有啦~');
+                    return;
+                }
+
+                // 添加到自定义菜单(使用"自定义"分类)
+                DataLayer.addCustomFood('自定义', foodName);
+                UILayer.elements.quickFoodName.value = '';
+
+                UILayer.renderCustomMenuList();
+                this.refreshSettings();
+                Utils.showToast('添加成功~');
+            },
+
+            deleteCustomFood(id) {
+                const customFoods = DataLayer.getCustomFoods();
+                const filtered = customFoods.filter(item => item.id !== id);
+                localStorage.setItem(STORAGE_KEYS.CUSTOM_FOODS, JSON.stringify(filtered));
+
+                UILayer.renderCustomMenuList();
+                this.refreshSettings();
+            },
+
+            handleStartCustom() {
+                const customFoods = DataLayer.getCustomFoods();
+
+                if (customFoods.length === 0) {
+                    Utils.showToast('请先添加菜品哦~');
+                    return;
+                }
+
+                UILayer.hideCustomMenu();
+
+                if (customFoods.length === 1) {
+                    this.stage = 'custom';
+                    this.currentFood = customFoods[0].foodName;
+                    UILayer.showResultCustom(customFoods[0].foodName);
+                } else {
+                    this.loadCustomModeWheel();
+                    setTimeout(() => this.handleSpin(), 300);
+                }
+            },
+
+            handleResetCustomMenu() {
+                if (confirm('确定要清空所有自定义菜品吗?')) {
+                    localStorage.setItem(STORAGE_KEYS.CUSTOM_FOODS, JSON.stringify([]));
+                    UILayer.renderCustomMenuList();
+                    this.refreshSettings();
+                    Utils.showToast('已清空~');
+                }
+            },
+
+            continueToFood() {
+                UILayer.hideCategory();
+                this.loadFoodWheel(this.currentCategory);
+                setTimeout(() => this.handleSpin(), 300);
+            },
+
+            rejectCategory() {
+                UILayer.hideCategory();
+                setTimeout(() => this.handleSpin(), 300);
+            },
+
+            closeCategory() {
+                UILayer.hideCategory();
+                this.loadCategoryWheel();
+            },
+
+            backToCategory() {
+                UILayer.hideResult();
+                this.loadCategoryWheel();
+            },
+
+            handleRejectFood() {
+                if (this.currentFood) {
+                    DataLayer.addToBlacklist(this.currentFood);
+                }
+                UILayer.hideResult();
+
+                setTimeout(() => {
+                    if (this.stage === 'custom') {
+                        // 自定义模式:重新加载并转盘
+                        const customFoods = DataLayer.getCustomFoods();
+                        if (customFoods.length === 0) {
+                            Utils.showToast('没有自定义菜品了哦~');
+                            this.loadCategoryWheel();
+                        } else {
+                            this.handleCustomMode();
+                        }
+                    } else {
+                        // 普通模式:重新加载当前分类
+                        const hasItems = this.loadFoodWheel(this.currentCategory);
+                        if (!hasItems) {
+                            UILayer.showBoundary();
+                        } else {
+                            this.handleSpin();
+                        }
+                    }
+                }, 300);
+            },
+
+            handleAccept() {
+                UILayer.hideResult();
+                ConfettiEngine.burst();
+                setTimeout(() => ConfettiEngine.stop(), 5000);
+
+                setTimeout(() => {
+                    this.loadCategoryWheel();
+                }, 2000);
+            },
+
+            closeResult() {
+                UILayer.hideResult();
+                this.loadCategoryWheel();
+            },
+
+            handleAddCustom() {
+                const foodName = UILayer.elements.customFoodName.value.trim();
+                const category = UILayer.elements.customFoodCategory.value;
+
+                if (!foodName) {
+                    Utils.showToast('请输入菜名哦~');
+                    return;
+                }
+
+                if (foodName.length > 20) {
+                    Utils.showToast('菜名太长啦，短一点~');
+                    return;
+                }
+
+                const allCategories = DataLayer.getAllCategories();
+                const existingFoods = allCategories[category] || [];
+                if (existingFoods.includes(foodName)) {
+                    Utils.showToast('这个已经有啦~');
+                    return;
+                }
+
+                DataLayer.addCustomFood(category, foodName);
+                UILayer.elements.customFoodName.value = '';
+
+                this.refreshSettings();
+
+                if (this.stage === 'category') {
+                    this.loadCategoryWheel();
+                } else {
+                    this.loadFoodWheel(this.currentCategory);
+                }
+
+                Utils.showToast('添加成功~');
+            },
+
+            handleResetCustom() {
+                const customs = DataLayer.getCustomFoods();
+                if (customs.length === 0) {
+                    Utils.showToast('没有自定义菜品哦~');
+                    return;
+                }
+
+                if (confirm(`确定要清空 ${customs.length} 个自定义菜品吗?`)) {
+                    DataLayer.clearCustomFoods();
+                    this.refreshSettings();
+
+                    if (this.stage === 'category') {
+                        this.loadCategoryWheel();
+                    } else {
+                        this.loadFoodWheel(this.currentCategory);
+                    }
+
+                    Utils.showToast('已清空所有自定义菜品~');
+                }
+            }
+        };
+
+        // ==================== Initialize ====================
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
