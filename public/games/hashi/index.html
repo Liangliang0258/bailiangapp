@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="数桥 Hashi - 经典逻辑推理游戏，通过建立桥梁连接岛屿满足数字要求">
     <title>数桥 Hashi - 逻辑推理游戏</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,13 +12,13 @@
         <header class="game-header">
             <h1 class="game-title">数桥 Hashi</h1>
             <div class="header-controls">
-                <select id="difficultySelect" class="difficulty-select">
+                <select id="difficultySelect" class="difficulty-select" aria-label="选择游戏难度">
                     <option value="easy">简单</option>
                     <option value="medium" selected>中等</option>
                     <option value="hard">困难</option>
                 </select>
-                <button id="resetBtn" class="btn">重置</button>
-                <button id="helpBtn" class="btn">?</button>
+                <button id="resetBtn" class="btn" aria-label="重置游戏" title="重置当前游戏">重置</button>
+                <button id="helpBtn" class="btn" aria-label="查看帮助" title="游戏规则">?</button>
             </div>
         </header>
 
@@ -33,17 +34,17 @@
 
         <footer class="game-footer">
             <div class="stats">
-                <span class="stat">步数: <strong id="movesCount">0</strong></span>
-                <span class="stat">时间: <strong id="timer">00:00</strong></span>
+                <span class="stat">步数: <strong id="movesCount" aria-live="polite">0</strong></span>
+                <span class="stat">时间: <strong id="timer" aria-live="off">00:00</strong></span>
                 <span class="stat">最佳: <strong id="bestScore">-</strong></span>
             </div>
         </footer>
     </div>
 
-    <div id="winModal" class="modal hidden" aria-hidden="true">
+    <div id="winModal" class="modal hidden" role="dialog" aria-labelledby="winTitle" aria-hidden="true">
         <div class="modal-backdrop"></div>
         <div class="modal-content">
-            <h2>🎉 完成！</h2>
+            <h2 id="winTitle">🎉 完成！</h2>
             <p class="win-stats">
                 步数: <span id="winMoves">0</span> |
                 时间: <span id="winTime">00:00</span>
@@ -53,10 +54,10 @@
         </div>
     </div>
 
-    <div id="helpModal" class="modal hidden" aria-hidden="true">
+    <div id="helpModal" class="modal hidden" role="dialog" aria-labelledby="helpTitle" aria-hidden="true">
         <div class="modal-backdrop"></div>
         <div class="modal-content large">
-            <h2>游戏规则</h2>
+            <h2 id="helpTitle">游戏规则</h2>
             <div class="rules-content">
                 <p>1. 点击两个相邻岛屿建立桥梁</p>
                 <p>2. 每个岛屿的桥梁数量必须等于其数字</p>
@@ -68,7 +69,7 @@
         </div>
     </div>
 
-    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+    <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
     <script src="utils.js"></script>
     <script src="gamestate.js"></script>
@@ -77,5 +78,10 @@
     <script src="renderer.js"></script>
     <script src="main.js"></script>
     <script src="../navbar.js"></script>
+    <noscript>
+        <div style="text-align: center; padding: 20px; color: red;">
+            请启用 JavaScript 以玩此游戏
+        </div>
+    </noscript>
 </body>
 </html>
