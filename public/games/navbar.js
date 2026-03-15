@@ -17,10 +17,10 @@
             <span class="logo-text">佰亮的AI百宝箱</span>
           </a>
           <div class="navbar-links">
-            <a href="/#portfolio" class="nav-link">游戏</a>
-            <a href="/#tools" class="nav-link">工具</a>
-            <a href="/#about" class="nav-link">关于</a>
-            <a href="/#contact" class="nav-link">联系</a>
+            <a href="/#portfolio" class="nav-link">小游戏</a>
+            <a href="/#tools" class="nav-link">小工具</a>
+            <a href="/#about" class="nav-link">关于我</a>
+            <a href="/#contact" class="nav-link">联系我</a>
             <a href="/" class="nav-link home-link">返回首页</a>
           </div>
         </div>

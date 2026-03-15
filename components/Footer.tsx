@@ -1,3 +1,5 @@
+import { NAV_LINKS } from "@/lib/data";
+
 export default function Footer() {
   return (
     <footer className="py-8 px-6 bg-zinc-950 border-t border-zinc-900">
@@ -11,19 +13,16 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#portfolio" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
-              游戏
-            </a>
-            <a href="#tools" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
-              工具
-            </a>
-            <a href="#about" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
-              关于
-            </a>
-            <a href="#contact" className="font-body text-sm text-zinc-400 hover:text-white transition-colors">
-              联系
-            </a>
-          </div>ßß
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="font-body text-sm text-zinc-400 hover:text-white transition-colors"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
 
           <p className="font-body text-sm text-zinc-500">
             © {new Date().getFullYear()}

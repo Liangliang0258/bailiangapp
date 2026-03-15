@@ -25,7 +25,7 @@ export default function Home() {
               小游戏
             </h2>
             <p className="font-body text-lg text-zinc-600 mt-4 max-w-2xl mx-auto">
-              好玩的小游戏，摸鱼时刻来一把
+              好玩的小游戏，摸鱼时候来一把
             </p>
           </div>
 

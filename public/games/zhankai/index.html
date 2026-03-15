@@ -15,11 +15,12 @@
         <div id="message" aria-live="polite"></div>
       </div>
       <div class="hud-right">
+        <div class="difficulty-label">请选择难度等级</div>
         <div class="difficulty-buttons">
-          <button class="difficulty-btn" data-value="4" title="简单 4×4">简单</button>
-          <button class="difficulty-btn active" data-value="6" title="一般 6×6">一般</button>
-          <button class="difficulty-btn" data-value="8" title="困难 8×8">困难</button>
-          <button class="difficulty-btn" data-value="11" title="最强大脑 11×11">最强大脑</button>
+          <button class="difficulty-btn" data-value="4" title="初级 4×4">初级（4×4）</button>
+          <button class="difficulty-btn active" data-value="6" title="中级 6×6">中级（6×6）</button>
+          <button class="difficulty-btn" data-value="8" title="高级 8×8">高级（8×8）</button>
+          <button class="difficulty-btn" data-value="11" title="顶级 11×11">顶级（11×11）</button>
         </div>
         <div class="action-buttons">
           <button id="submit" class="btn-primary" title="提交答案 (Enter)">提交</button>
@@ -43,7 +44,27 @@
           <div id="cube-wrap">
             <div id="cube-canvas"></div>
           </div>
-          <p class="cube-hint">💡 拖拽立方体查看六面图形，找出网格中能组成正确展开图的 6 个格子</p>
+          <div class="cube-hint-container">
+            <p class="cube-hint">💡 拖拽立方体查看六面图形，找出网格中能组成正确展开图的 6 个格子</p>
+            <div class="cube-buttons">
+              <button id="toggleReference" class="btn-reference">查看所有展开图形态</button>
+              <button id="reset-view" class="btn-reference">🔄 重置视角</button>
+            </div>
+          </div>
+
+          <!-- 参考面板 -->
+          <div id="referencePanel" class="reference-panel hidden">
+            <div class="reference-header">
+              <h3>📐 立方体 11 种展开图形态</h3>
+              <button id="closeReference" class="reference-close">×</button>
+            </div>
+            <div class="reference-content">
+              <img src="/images/games/cube_nets_simple.svg" alt="立方体11种展开图" style="width: 100%; height: auto;" />
+            </div>
+            <div class="reference-footer">
+              <p>💡 这些是立方体所有可能的展开图形态</p>
+            </div>
+          </div>
         </section>
       </section>
     </main>

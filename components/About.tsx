@@ -29,10 +29,10 @@ export default function About() {
               这个网站除了这段话，都是<span className="text-blue-600 font-semibold">AI</span>写的。
             </p>
             <p className="font-body text-base text-zinc-600 leading-relaxed mt-3">
-              网站会放一些我用AI做的小工具和小游戏，都是我平时会用的，主打一个简洁干净无广告，因为我受够了那些乱七八糟的广告。
+              网站会放一些我用AI做的小工具和小游戏，都是我平时会用的，主打简洁干净无广告，因为我受够了那些乱七八糟的广告。
             </p>
             <p className="font-body text-base text-zinc-600 leading-relaxed mt-3">
-              欢迎你对产品多提意见，也欢迎提供需求，你可以通过下方联系方式联系到我。
+              欢迎你对产品多提意见，也欢迎提供需求，你可以通过下方联系方式找到我。
             </p>
             <p className="font-body text-base text-zinc-600 leading-relaxed mt-3">
               感谢～～

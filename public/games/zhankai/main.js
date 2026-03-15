@@ -630,16 +630,23 @@ class CubeRenderer {
     this.rotationVelocity = { x: 0, y: 0 };
     this.targetRotation = { x: 0, y: 0 };
     this.dragConfig = {
-      sensitivity: 0.008,        // 提高灵敏度（从 0.014 改为 0.008）
-      velocitySmoothing: 0.3,    // 降低平滑度，更快响应（从 0.6 改为 0.3）
-      inertia: 0.85,             // 降低惯性，减少滑动（从 0.93 改为 0.85）
-      follow: 0.4,               // 提高跟随速度（从 0.22 改为 0.4）
-      followDragging: 0.7,       // 拖拽时更快跟随（从 0.45 改为 0.7）
-      maxVelocity: 0.2,          // 提高最大速度（从 0.16 改为 0.2）
-      minMove: 0.5,              // 降低移动阈值（从 0.2 改为 0.5）
-      directionX: 1,
-      directionY: 1,
+      sensitivity: 0.015,        // 灵敏度
+      velocitySmoothing: 0.2,    // 速度平滑
+      inertia: 0.92,             // 惯性系数
+      follow: 0.35,              // 跟随速度
+      followDragging: 0.8,       // 拖拽时跟随速度
+      maxVelocity: 0.25,         // 最大旋转速度
+      minMove: 1,                // 最小移动阈值
+      directionX: 1,             // X轴方向
+      directionY: 1,             // Y轴方向
     };
+  }
+
+  // 清理拖动状态（用于游戏重置时）
+  resetDragState() {
+    this.isDragging = false;
+    this.activePointerId = null;
+    this.rotationVelocity = { x: 0, y: 0 };
   }
 
   init() {
@@ -731,17 +738,33 @@ class CubeRenderer {
   onPointerDown(e) {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     e.preventDefault();
-    if (this.activePointerId !== null) return;
+
+    // 清理之前可能残留的状态
+    if (this.activePointerId !== null) {
+      try {
+        this.canvas.releasePointerCapture(this.activePointerId);
+      } catch (error) {
+        // Ignore capture errors.
+      }
+    }
+
     this.isDragging = true;
     this.activePointerId = e.pointerId;
     this.canvas.setPointerCapture(e.pointerId);
     this.lastX = e.clientX;
     this.lastY = e.clientY;
+    // 重置速度，确保拖拽响应灵敏
     this.rotationVelocity = { x: 0, y: 0 };
   }
 
   onPointerMove(e) {
-    if (!this.isDragging || e.pointerId !== this.activePointerId) return;
+    if (!this.isDragging) return;
+
+    // 检查 pointerId 是否匹配
+    if (this.activePointerId !== null && e.pointerId !== this.activePointerId) {
+      return;
+    }
+
     e.preventDefault();
 
     const dx = e.clientX - this.lastX;
@@ -749,24 +772,22 @@ class CubeRenderer {
     this.lastX = e.clientX;
     this.lastY = e.clientY;
 
-    // 降低移动阈值，让小幅移动也能响应
+    // 移动阈值检查
     if (Math.abs(dx) + Math.abs(dy) < this.dragConfig.minMove) return;
 
-    // 直接计算旋转速度，减少平滑处理
-    const vx = dy * this.dragConfig.sensitivity * this.dragConfig.directionY;
-    const vy = dx * this.dragConfig.sensitivity * this.dragConfig.directionX;
+    // 计算旋转速度（鼠标水平移动控制 Y 轴旋转，垂直移动控制 X 轴旋转）
+    let vx = dy * this.dragConfig.sensitivity * this.dragConfig.directionY;
+    let vy = dx * this.dragConfig.sensitivity * this.dragConfig.directionX;
 
-    // 限制最大速度
-    this.rotationVelocity.x = Math.max(
-      -this.dragConfig.maxVelocity,
-      Math.min(this.dragConfig.maxVelocity, vx)
-    );
-    this.rotationVelocity.y = Math.max(
-      -this.dragConfig.maxVelocity,
-      Math.min(this.dragConfig.maxVelocity, vy)
-    );
+    // 限制速度并保持方向
+    vx = Math.sign(vx) * Math.min(Math.abs(vx), this.dragConfig.maxVelocity);
+    vy = Math.sign(vy) * Math.min(Math.abs(vy), this.dragConfig.maxVelocity);
 
-    // 直接更新目标旋转
+    // 应用速度平滑
+    this.rotationVelocity.x = this.rotationVelocity.x * this.dragConfig.velocitySmoothing + vx * (1 - this.dragConfig.velocitySmoothing);
+    this.rotationVelocity.y = this.rotationVelocity.y * this.dragConfig.velocitySmoothing + vy * (1 - this.dragConfig.velocitySmoothing);
+
+    // 更新目标旋转
     this.targetRotation.x += this.rotationVelocity.x;
     this.targetRotation.y += this.rotationVelocity.y;
   }
@@ -781,6 +802,9 @@ class CubeRenderer {
     }
     this.isDragging = false;
     this.activePointerId = null;
+    // 释放时轻微衰减速度，让惯性更自然
+    this.rotationVelocity.x *= 0.5;
+    this.rotationVelocity.y *= 0.5;
   }
 
   onResize() {
@@ -788,6 +812,8 @@ class CubeRenderer {
     this.camera.aspect = clientWidth / clientHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(clientWidth, clientHeight);
+    // 清理拖动状态，避免窗口调整后拖动异常
+    this.resetDragState();
   }
 
   animate() {
@@ -801,12 +827,11 @@ class CubeRenderer {
       this.targetRotation.y += this.rotationVelocity.y;
     }
 
-    // 根据是否拖拽使用不同的跟随速度
-    const follow = this.isDragging
-      ? this.dragConfig.followDragging  // 拖拽时更快跟随
-      : this.dragConfig.follow;          // 平滑过渡
-
     // 平滑插值更新实际旋转
+    const follow = this.isDragging
+      ? this.dragConfig.followDragging
+      : this.dragConfig.follow;
+
     this.cube.rotation.x +=
       (this.targetRotation.x - this.cube.rotation.x) * follow;
     this.cube.rotation.y +=
@@ -834,6 +859,12 @@ class CubeRenderer {
       const texture = new THREE.CanvasTexture(canvas);
       texture.needsUpdate = true;
       const matIndex = normalToMaterialIndex[key];
+
+      // 释放旧纹理，避免内存泄漏
+      if (this.materials[matIndex].map) {
+        this.materials[matIndex].map.dispose();
+      }
+
       this.materials[matIndex].map = texture;
       this.materials[matIndex].needsUpdate = true;
     }
@@ -858,6 +889,9 @@ class Game {
     this.modalTitleEl = document.querySelector("#modal-title");
     this.modalDescEl = document.querySelector("#modal-desc");
     this.modalOkBtn = document.querySelector("#modal-ok");
+    this.referencePanel = document.querySelector('#referencePanel');
+    this.toggleReferenceBtn = document.querySelector('#toggleReference');
+    this.closeReferenceBtn = document.querySelector('#closeReference');
 
     this.gridCells = [];
     this.gridSymbols = [];
@@ -882,6 +916,7 @@ class Game {
     this.cubeRenderer.init();
 
     this.setupEventListeners();
+    this.initReferencePanel();
     if (this.difficultySelect) {
       this.difficultySelect.value = String(this.gridSize);
     }
@@ -894,6 +929,7 @@ class Game {
     document.querySelector("#clear").addEventListener("click", () => this.clear());
     document.querySelector("#hint").addEventListener("click", () => this.showAnswer());
     document.querySelector("#restart").addEventListener("click", () => this.newGame());
+    document.querySelector("#reset-view").addEventListener("click", () => this.resetView());
     this.toggleSoundBtn.addEventListener("click", () => this.toggleSound());
     if (this.difficultySelect) {
       this.difficultySelect.addEventListener("change", (e) => {
@@ -1039,14 +1075,24 @@ class Game {
     const gapSize = this.gridSize >= 8 ? 5 : 8;
     this.gridEl.style.setProperty("--grid-size", this.gridSize);
     this.gridEl.style.setProperty("--grid-gap", `${gapSize}px`);
-    this.gridEl.style.setProperty("--cell-min", this.gridSize >= 8 ? "30px" : "38px");
+
+    // 使用查找表设置单元格尺寸
+    const cellSizeConfig = {
+      4: { min: "38px", dynamic: 32 },
+      6: { min: "38px", dynamic: 32 },
+      8: { min: "32px", dynamic: 28 },
+      11: { min: "24px", dynamic: 22 }
+    };
+    const config = cellSizeConfig[this.gridSize] || { min: "28px", dynamic: 28 };
+
+    this.gridEl.style.setProperty("--cell-min", config.min);
     this.gridEl.setAttribute(
       "aria-label",
       `${this.gridSize}x${this.gridSize} 方格，使用方向键移动，空格键选择`
     );
     const gridWidth = this.gridEl.clientWidth || Math.min(window.innerWidth * 0.85, 480);
     const cellSize = Math.floor((gridWidth - gapSize * (this.gridSize - 1)) / this.gridSize);
-    this.cellSize = Math.max(30, Math.min(140, cellSize));
+    this.cellSize = Math.max(config.dynamic, Math.min(140, cellSize));
 
     for (let i = 0; i < this.gridSize * this.gridSize; i++) {
       const cell = document.createElement("div");
@@ -1165,6 +1211,7 @@ class Game {
         btn.classList.remove("active");
       }
     });
+    // newGame() 会清理拖动状态，不需要在这里重复调用
     this.newGame();
   }
 
@@ -1231,6 +1278,32 @@ class Game {
     }
   }
 
+  // ========== 参考面板方法 ==========
+  initReferencePanel() {
+    // 打开面板
+    if (this.toggleReferenceBtn) {
+      this.toggleReferenceBtn.addEventListener('click', () => {
+        this.referencePanel.classList.remove('hidden');
+      });
+    }
+
+    // 关闭面板（点击关闭按钮）
+    if (this.closeReferenceBtn) {
+      this.closeReferenceBtn.addEventListener('click', () => {
+        this.referencePanel.classList.add('hidden');
+      });
+    }
+
+    // 点击面板外部关闭
+    if (this.referencePanel) {
+      this.referencePanel.addEventListener('click', (e) => {
+        if (e.target === this.referencePanel) {
+          this.referencePanel.classList.add('hidden');
+        }
+      });
+    }
+  }
+
   startTimer() {
     this.startTime = performance.now();
     this.timerRunning = true;
@@ -1255,6 +1328,11 @@ class Game {
 
   newGame() {
     try {
+      // 清理立方体拖动状态
+      if (this.cubeRenderer) {
+        this.cubeRenderer.resetDragState();
+      }
+
       const puzzle = this.generator.generate();
       this.gridSymbols = puzzle.grid;
       this.correctSet = puzzle.correct;
@@ -1275,6 +1353,27 @@ class Game {
     } catch (error) {
       this.showMessage(error.message, "error");
       console.error(error);
+    }
+  }
+
+  // 重置视角
+  resetView() {
+    if (this.cubeRenderer && this.cubeRenderer.cube) {
+      // 重置立方体旋转到初始角度
+      this.cubeRenderer.cube.rotation.x = 0;
+      this.cubeRenderer.cube.rotation.y = 0;
+      this.cubeRenderer.cube.rotation.z = 0;
+
+      // 重置目标旋转
+      this.cubeRenderer.targetRotation = { x: 0, y: 0 };
+
+      // 重置旋转速度
+      this.cubeRenderer.rotationVelocity = { x: 0, y: 0 };
+
+      // 清理拖动状态
+      this.cubeRenderer.resetDragState();
+
+      this.sound.play("click");
     }
   }
 }

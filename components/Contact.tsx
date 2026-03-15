@@ -22,15 +22,15 @@ export default function Contact() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </>
       ),
-      label: "微信公众号",
-      value: "佰亮同学",
+      label: "加我微信",
+      value: "bailiang5678",
       href: null,
     },
     {
       icon: (
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
       ),
-      label: "抖音/小红书等自媒体平台",
+      label: "公众号/抖音/小红书等平台",
       value: contactInfo.wechatAccount,
       href: null,
     },
