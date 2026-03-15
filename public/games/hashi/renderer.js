@@ -52,8 +52,9 @@ class HashiRenderer {
             } else {
                 const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 group.setAttribute('class', isError ? 'bridge double error' : 'bridge double');
-                const dx = (to.x - from.x) / Math.sqrt((to.x - from.x) ** 2 + (to.y - from.y) ** 2) * 6;
-                const dy = (to.y - from.y) / Math.sqrt((to.x - from.x) ** 2 + (to.y - from.y) ** 2) * 6;
+                // Calculate perpendicular offset for double bridges
+                const dx = (to.x - from.x) / Math.sqrt((to.x - from.x) ** 2 + (to.y - from.y) ** 2) * 10;
+                const dy = (to.y - from.y) / Math.sqrt((to.x - from.x) ** 2 + (to.y - from.y) ** 2) * 10;
                 const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line1.setAttribute('x1', from.x + dx); line1.setAttribute('y1', from.y + dy);
                 line1.setAttribute('x2', to.x + dx); line1.setAttribute('y2', to.y + dy);
