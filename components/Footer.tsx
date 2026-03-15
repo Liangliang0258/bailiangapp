@@ -1,6 +1,11 @@
-import { NAV_LINKS } from "@/lib/data";
-
 export default function Footer() {
+  const navLinks = [
+    { name: "小游戏", href: "#portfolio" },
+    { name: "小工具", href: "#tools" },
+    { name: "关于我", href: "#about" },
+    { name: "联系我", href: "#contact" },
+  ];
+
   return (
     <footer className="py-8 px-6 bg-zinc-950 border-t border-zinc-900">
       <div className="max-w-7xl mx-auto">
@@ -13,7 +18,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
