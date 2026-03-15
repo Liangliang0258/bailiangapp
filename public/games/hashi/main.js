@@ -142,10 +142,8 @@ class HashiGame {
     }
 
     showHint() {
-        console.log('showHint called', this.gameState.solution);
-        // Directly show the solution without any popup
+        // Directly show the solution without triggering win popup
         if (this.gameState.solution && this.gameState.solution.length > 0) {
-            console.log('Loading solution:', this.gameState.solution);
             this.gameState.bridges = [];
             this.gameState.solution.forEach(bridge => {
                 this.gameState.bridges.push({
@@ -157,9 +155,7 @@ class HashiGame {
             this.gameState.updateIslandCounts();
             this.gameState.clearSelection();
             this.render();
-            this.checkWin();
-        } else {
-            console.log('No solution found');
+            // Don't check win - just show the answer
         }
     }
 
