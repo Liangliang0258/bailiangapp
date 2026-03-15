@@ -30,10 +30,9 @@ export const games: Game[] = [
   },
   {
     id: "3",
-    title: "数桥 Hashi",
-    description: "经典逻辑推理游戏，通过建立桥梁连接岛屿满足数字要求。",
-    image: "/images/games/hashi-thumb.svg",
-    link: "/games/hashi/index.html",
+    title: "待开发",
+    description: "敬请期待更多有趣的游戏...",
+    link: "#",
   },
   {
     id: "4",
