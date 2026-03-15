@@ -13,11 +13,6 @@ export interface Tool {
   link: string;
 }
 
-export interface NavLink {
-  name: string;
-  href: string;
-}
-
 export const games: Game[] = [
   {
     id: "1",
@@ -80,12 +75,3 @@ export const contactInfo = {
   wechat: "扫码关注公众号",
   wechatAccount: "佰亮同学",
 };
-
-// 导航链接配置
-export const NAV_LINKS: NavLink[] = [
-  { name: "小游戏", href: "#portfolio" },
-  { name: "小工具", href: "#tools" },
-  { name: "关于我", href: "#about" },
-  { name: "联系我", href: "#contact" },
-] as const;
-
