@@ -141,24 +141,21 @@ class HashiGame {
     }
 
     showHint() {
-        if (!this.gameState.solution || this.gameState.solution.length === 0) {
-            alert('此关卡没有预设答案');
-            return;
-        }
-
-        // Clear current bridges and load solution
-        this.gameState.bridges = [];
-        this.gameState.solution.forEach(bridge => {
-            this.gameState.bridges.push({
-                fromKey: bridge.fromKey,
-                toKey: bridge.toKey,
-                count: bridge.count
+        // Directly show the solution without any popup
+        if (this.gameState.solution && this.gameState.solution.length > 0) {
+            this.gameState.bridges = [];
+            this.gameState.solution.forEach(bridge => {
+                this.gameState.bridges.push({
+                    fromKey: bridge.fromKey,
+                    toKey: bridge.toKey,
+                    count: bridge.count
+                });
             });
-        });
-        this.gameState.updateIslandCounts();
-        this.gameState.clearSelection();
-        this.render();
-        this.checkWin();
+            this.gameState.updateIslandCounts();
+            this.gameState.clearSelection();
+            this.render();
+            this.checkWin();
+        }
     }
 
     loadBestScore() {
