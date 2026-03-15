@@ -54,6 +54,7 @@ class HashiGame {
     loadLevel(level) {
         this.gameState.gridSize = level.gridSize;
         this.gameState.solution = level.solution || [];
+        console.log('Level loaded with solution:', this.gameState.solution);
         level.islands.forEach(island => {
             this.gameState.addIsland(island.row, island.col, island.target);
         });
@@ -141,8 +142,10 @@ class HashiGame {
     }
 
     showHint() {
+        console.log('showHint called', this.gameState.solution);
         // Directly show the solution without any popup
         if (this.gameState.solution && this.gameState.solution.length > 0) {
+            console.log('Loading solution:', this.gameState.solution);
             this.gameState.bridges = [];
             this.gameState.solution.forEach(bridge => {
                 this.gameState.bridges.push({
@@ -155,6 +158,8 @@ class HashiGame {
             this.gameState.clearSelection();
             this.render();
             this.checkWin();
+        } else {
+            console.log('No solution found');
         }
     }
 
