@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数桥 Hashi - 逻辑推理游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1 class="game-title">数桥 Hashi</h1>
+            <div class="header-controls">
+                <select id="difficultySelect" class="difficulty-select">
+                    <option value="easy">简单</option>
+                    <option value="medium" selected>中等</option>
+                    <option value="hard">困难</option>
+                </select>
+                <button id="resetBtn" class="btn">重置</button>
+                <button id="helpBtn" class="btn">?</button>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="canvas-container">
+                <svg id="gameSvg" viewBox="0 0 500 500" aria-label="数桥游戏区域">
+                    <g class="bridges-layer"></g>
+                    <g class="hints-layer"></g>
+                    <g class="islands-layer"></g>
+                </svg>
+            </div>
+        </main>
+
+        <footer class="game-footer">
+            <div class="stats">
+                <span class="stat">步数: <strong id="movesCount">0</strong></span>
+                <span class="stat">时间: <strong id="timer">00:00</strong></span>
+                <span class="stat">最佳: <strong id="bestScore">-</strong></span>
+            </div>
+        </footer>
+    </div>
+
+    <div id="winModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h2>🎉 完成！</h2>
+            <p class="win-stats">
+                步数: <span id="winMoves">0</span> |
+                时间: <span id="winTime">00:00</span>
+            </p>
+            <p class="best-record" id="bestRecordMsg"></p>
+            <button id="playAgainBtn" class="btn primary">再来一局</button>
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content large">
+            <h2>游戏规则</h2>
+            <div class="rules-content">
+                <p>1. 点击两个相邻岛屿建立桥梁</p>
+                <p>2. 每个岛屿的桥梁数量必须等于其数字</p>
+                <p>3. 两岛之间最多2座桥</p>
+                <p>4. 桥梁只能水平或垂直连接</p>
+                <p>5. 所有岛屿必须连通</p>
+            </div>
+            <button id="closeHelpBtn" class="btn primary">明白了</button>
+        </div>
+    </div>
+
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+    <script src="utils.js"></script>
+    <script src="gamestate.js"></script>
+    <script src="validator.js"></script>
+    <script src="generator.js"></script>
+    <script src="renderer.js"></script>
+    <script src="main.js"></script>
+    <script src="../navbar.js"></script>
+</body>
+</html>
