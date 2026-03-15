@@ -151,7 +151,7 @@ body {
 
 .bridge {
     stroke: var(--color-primary);
-    stroke-width: 3;
+    stroke-width: 2;
     stroke-linecap: round;
 }
 
