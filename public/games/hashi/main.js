@@ -12,6 +12,7 @@ class HashiGame {
     init() {
         this.difficultySelect = document.getElementById('difficultySelect');
         this.resetBtn = document.getElementById('resetBtn');
+        this.hintBtn = document.getElementById('hintBtn');
         this.helpBtn = document.getElementById('helpBtn');
         this.playAgainBtn = document.getElementById('playAgainBtn');
         this.closeHelpBtn = document.getElementById('closeHelpBtn');
@@ -20,6 +21,7 @@ class HashiGame {
 
         this.difficultySelect.addEventListener('change', () => this.newGame());
         this.resetBtn.addEventListener('click', () => this.resetGame());
+        this.hintBtn.addEventListener('click', () => this.showHint());
         this.helpBtn.addEventListener('click', () => this.showHelp());
         this.playAgainBtn.addEventListener('click', () => { this.hideModals(); this.newGame(); });
         this.closeHelpBtn.addEventListener('click', () => this.hideHelp());
@@ -51,6 +53,7 @@ class HashiGame {
 
     loadLevel(level) {
         this.gameState.gridSize = level.gridSize;
+        this.gameState.solution = level.solution || [];
         level.islands.forEach(island => {
             this.gameState.addIsland(island.row, island.col, island.target);
         });
@@ -135,6 +138,27 @@ class HashiGame {
     hideHelp() {
         this.helpModal.classList.add('hidden');
         this.helpModal.setAttribute('aria-hidden', 'true');
+    }
+
+    showHint() {
+        if (!this.gameState.solution || this.gameState.solution.length === 0) {
+            alert('此关卡没有预设答案');
+            return;
+        }
+
+        // Clear current bridges and load solution
+        this.gameState.bridges = [];
+        this.gameState.solution.forEach(bridge => {
+            this.gameState.bridges.push({
+                fromKey: bridge.fromKey,
+                toKey: bridge.toKey,
+                count: bridge.count
+            });
+        });
+        this.gameState.updateIslandCounts();
+        this.gameState.clearSelection();
+        this.render();
+        this.checkWin();
     }
 
     loadBestScore() {

@@ -4,6 +4,7 @@ class GameState {
         this.gridSize = this.getGridSize(difficulty);
         this.islands = new Map();
         this.bridges = [];
+        this.solution = []; // Store the correct solution
         this.selectedIsland = null;
         this.moves = 0;
         this.startTime = null;
