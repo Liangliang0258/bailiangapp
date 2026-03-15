@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { NAV_LINKS } from "@/lib/data";
+
+const navLinks = [
+  { name: "小游戏", href: "#portfolio" },
+  { name: "小工具", href: "#tools" },
+  { name: "关于我", href: "#about" },
+  { name: "联系我", href: "#contact" },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +47,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
@@ -89,7 +95,7 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-lg border-t border-zinc-200/50">
           <div className="px-4 py-4 space-y-2">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
