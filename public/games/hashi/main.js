@@ -5,6 +5,7 @@ class HashiGame {
         this.validator = null;
         this.renderer = null;
         this.generator = new HashiGenerator();
+        this.timerInterval = null;
         this.init();
     }
 
@@ -29,6 +30,12 @@ class HashiGame {
     }
 
     newGame() {
+        // Clear existing timer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+
         const difficulty = this.difficultySelect.value;
         this.gameState = new GameState(difficulty);
         this.validator = new HashiValidator(this.gameState);
@@ -99,7 +106,7 @@ class HashiGame {
     }
 
     startTimerUpdate() {
-        setInterval(() => {
+        this.timerInterval = setInterval(() => {
             if (!this.gameState.isComplete) this.renderer.updateStats();
         }, 1000);
     }
