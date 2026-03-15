@@ -8,10 +8,8 @@ class HashiValidator {
         const toIsland = this.gameState.getIsland(toKey);
         if (!fromIsland || !toIsland) return { valid: false, reason: 'Island not found' };
 
-        const fromPos = { row: fromIsland.row, col: fromIsland.col };
-        const toPos = { row: toIsland.row, col: toIsland.col };
-        if (!areAdjacent(fromPos, toPos)) {
-            return { valid: false, reason: 'Islands must be adjacent' };
+        if (!areAdjacent(fromIsland, toIsland, this.gameState)) {
+            return { valid: false, reason: 'Islands must be in same row/col with no islands between' };
         }
 
         const currentCount = this.gameState.getBridgeCount(fromKey, toKey);

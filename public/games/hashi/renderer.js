@@ -70,12 +70,15 @@ class HashiRenderer {
         if (!this.gameState.selectedIsland) return;
         const selectedIsland = this.gameState.getIsland(this.gameState.selectedIsland);
         const from = this.gridToPixel(selectedIsland.row, selectedIsland.col);
-        const directions = [{row:-1,col:0}, {row:1,col:0}, {row:0,col:-1}, {row:0,col:1}];
-        directions.forEach(dir => {
-            const adjKey = `${selectedIsland.row + dir.row},${selectedIsland.col + dir.col}`;
-            if (this.gameState.islands.has(adjKey)) {
-                const adjIsland = this.gameState.getIsland(adjKey);
-                const to = this.gridToPixel(adjIsland.row, adjIsland.col);
+
+        // Show hints for all connectable islands (same row/col, no islands between)
+        this.gameState.islands.forEach((island, key) => {
+            if (key === this.gameState.selectedIsland) return;
+
+            // Check if connectable
+            const canConnect = areAdjacent(selectedIsland, island, this.gameState);
+            if (canConnect) {
+                const to = this.gridToPixel(island.row, island.col);
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
                 line.setAttribute('x2', to.x); line.setAttribute('y2', to.y);

@@ -50,11 +50,35 @@ function distance(p1, p2) {
     return Math.sqrt(Math.pow(p2.col - p1.col, 2) + Math.pow(p2.row - p1.row, 2));
 }
 
-// Check if two islands are adjacent (horizontal or vertical)
-function areAdjacent(island1, island2) {
-    const rowDiff = Math.abs(island1.row - island2.row);
-    const colDiff = Math.abs(island1.col - island2.col);
-    return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+// Check if two islands can be connected (same row/col with no islands between)
+function areAdjacent(island1, island2, gameState) {
+    // Must be in same row or same column
+    if (island1.row !== island2.row && island1.col !== island2.col) {
+        return false;
+    }
+
+    // Check if there are any islands between them
+    if (island1.row === island2.row) {
+        // Same row - check columns between
+        const minCol = Math.min(island1.col, island2.col);
+        const maxCol = Math.max(island1.col, island2.col);
+        for (const [key, island] of gameState.islands) {
+            if (island.row === island1.row && island.col > minCol && island.col < maxCol) {
+                return false; // Island between them
+            }
+        }
+        return true;
+    } else {
+        // Same column - check rows between
+        const minRow = Math.min(island1.row, island2.row);
+        const maxRow = Math.max(island1.row, island2.row);
+        for (const [key, island] of gameState.islands) {
+            if (island.col === island1.col && island.row > minRow && island.row < maxRow) {
+                return false; // Island between them
+            }
+        }
+        return true;
+    }
 }
 
 // Check if a bridge would cross any existing bridge
